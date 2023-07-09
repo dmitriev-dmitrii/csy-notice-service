@@ -17,7 +17,7 @@ const { WHATSAPP_PHONE_ID, WHATSAPP_ACCESS_TOKEN, WHATSAPP_WEBHOOK_TOKEN } =
 export class WhatsAppService {
   async sendNotice(data: NoticeDto) {
     // телефон юзера
-    const phoneNumber = "789111795751";
+    const phoneNumber = "";
 
     try {
       const data = {
