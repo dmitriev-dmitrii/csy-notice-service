@@ -7,15 +7,15 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
-import { SendService } from "./send.service";
+import { SendNoticeService } from "./send-notice.service";
 import { NoticeDto } from "./dto/notice.dto";
 
 @Controller("send")
-export class SendController {
-  constructor(private readonly sendService: SendService) {}
+export class SendNoticeController {
+  constructor(private readonly sendService: SendNoticeService) {}
 
   @Post()
-  create(@Body() data: NoticeDto) {
+  sendNotice(@Body() data: NoticeDto) {
     return this.sendService.sendNotice(data);
   }
 
