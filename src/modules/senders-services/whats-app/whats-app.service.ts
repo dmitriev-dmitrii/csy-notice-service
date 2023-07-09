@@ -16,11 +16,14 @@ const { WHATSAPP_PHONE_ID, WHATSAPP_ACCESS_TOKEN, WHATSAPP_WEBHOOK_TOKEN } =
 @Injectable()
 export class WhatsAppService {
   async sendNotice(data: NoticeDto) {
+    // телефон юзера
+    const phoneNumber = "789111795751";
+
     try {
       const data = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
-        to: "789111795751",
+        to: phoneNumber,
 
         // type: "text",
         // text: { preview_url: false, body: "text example" },
@@ -35,8 +38,11 @@ export class WhatsAppService {
         //   },
         // ],
 
+        type: "template",
+        template: { name: "hello_world", language: { code: "en_US" } },
+
         // type: "template",
-        // template: { name: "hello_world", language: { code: "en_US" } },
+        // template: { name: "payment", language: { code: "en_US" } },
       };
 
       // (fromPhoneNumberId: string, accessToken: string, version = "")
@@ -55,7 +61,7 @@ export class WhatsAppService {
       // console.log(result);
       // return result;
     } catch (err) {
-      console.log(err.response);
+      console.log(err);
       return err;
     } finally {
     }
