@@ -4,7 +4,7 @@ import { createBot } from "whatsapp-cloud-api";
 import { NoticeDto } from "../../send-notice/dto/notice.dto";
 import axios from "axios";
 
-const { WHATSAPP_PHONE_ID, WHATSAPP_ACCESS_TOKEN, WHATSAPP_WEBHOOK_TOKEN } =
+const { WHATSAPP_PHONE_ID, WHATSAPP_ACCESS_TOKEN, WHATSAPP_WEBHOOK_TOKEN, WHATSAPP_API_URL } =
   env;
 // https://www.npmjs.com/package/whatsapp-cloud-api
 // const webhookVerifyToken = WHATSAPP_ACCESS_TOKEN;
@@ -17,16 +17,17 @@ const { WHATSAPP_PHONE_ID, WHATSAPP_ACCESS_TOKEN, WHATSAPP_WEBHOOK_TOKEN } =
 export class WhatsAppService {
   async sendNotice(data: NoticeDto) {
     // телефон юзера
-    const phoneNumber = "";
+    const phoneNumber = data.user;
+    const textToSend = data.text;
 
     try {
       const data = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
         to: phoneNumber,
-
-        // type: "text",
-        // text: { preview_url: false, body: "text example" },
+        preview_url: false,
+        type: "text",
+        text: { body: textToSend },
 
         // type: "button",
         // sub_type: "quick_reply",
@@ -38,8 +39,8 @@ export class WhatsAppService {
         //   },
         // ],
 
-        type: "template",
-        template: { name: "hello_world", language: { code: "en_US" } },
+//        type: "template",
+//        template: { name: "hello_world", language: { code: "en_US" } },
 
         // type: "template",
         // template: { name: "payment", language: { code: "en_US" } },
@@ -48,7 +49,7 @@ export class WhatsAppService {
       // (fromPhoneNumberId: string, accessToken: string, version = "")
       await axios({
         method: "post",
-        url: `https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_ID}/messages`,
+        url: `${WHATSAPP_API_URL}/v17.0/${WHATSAPP_PHONE_ID}/messages`,
         data: JSON.stringify(data),
         headers: {
           Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,

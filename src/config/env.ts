@@ -5,6 +5,7 @@ const {
   WHATSAPP_PHONE_ID,
   WHATSAPP_ACCESS_TOKEN,
   WHATSAPP_WEBHOOK_TOKEN,
+  WHATSAPP_API_URL,
 } = process.env;
 
 export default Object.freeze({
@@ -12,4 +13,5 @@ export default Object.freeze({
   WHATSAPP_PHONE_ID,
   WHATSAPP_ACCESS_TOKEN,
   WHATSAPP_WEBHOOK_TOKEN,
+  WHATSAPP_API_URL,
 });
