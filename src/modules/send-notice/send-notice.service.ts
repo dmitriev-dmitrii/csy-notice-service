@@ -9,6 +9,6 @@ export class SendNoticeService {
     // if (data.noticeType === "whatsapp") {
     return this.WhatsAppService.sendNotice(data);
     // }
-    return `This action returns all send`;
+    // return `This action returns all send`;
   }
 }
