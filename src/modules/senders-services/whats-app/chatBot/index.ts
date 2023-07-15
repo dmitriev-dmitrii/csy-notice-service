@@ -1,3 +1,3 @@
 export { createBot } from "./createBot";
 
-export type { Bot, Message } from "./createBot.types";
+export type { Bot, Message } from "./interfaces";

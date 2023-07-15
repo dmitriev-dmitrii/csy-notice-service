@@ -1,12 +1,21 @@
 import type { RequireAtLeastOne } from "type-fest";
-
-// https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages
-
-interface Message {
+import { FreeFormObject } from "./utils/misc";
+import { PubSubEvent } from "./utils/pubSub";
+export interface PayloadBase {
   messaging_product: "whatsapp";
   recipient_type: "individual";
-  to: string;
 }
+
+export interface Message {
+  from: string;
+  name: string | undefined;
+  id: string;
+  timestamp: string;
+  type: PubSubEvent;
+  data: FreeFormObject;
+}
+
+// https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages
 
 interface ContactName {
   first_name?: string;
@@ -229,58 +238,62 @@ export interface Template {
   };
   components?: TemplateComponent[];
 }
-
+export interface DefaultMessage {
+  messaging_product: "whatsapp";
+  recipient_type: "individual";
+  to: string;
+}
 export interface Text {
   body: string;
   preview_url?: boolean;
 }
 
-export interface AudioMessage extends Message {
+export interface AudioMessage extends DefaultMessage {
   type: "audio";
   audio: Media;
 }
 
-export interface ContactMessage extends Message {
+export interface ContactMessage extends DefaultMessage {
   type: "contacts";
   contacts: Contact[];
 }
 
-export interface DocumentMessage extends Message {
+export interface DocumentMessage extends DefaultMessage {
   type: "document";
   document: Media;
 }
 
-export interface ImageMessage extends Message {
+export interface ImageMessage extends DefaultMessage {
   type: "image";
   image: Media;
 }
 
-export interface InteractiveMessage extends Message {
+export interface InteractiveMessage extends DefaultMessage {
   type: "interactive";
   interactive: Interactive;
 }
 
-export interface LocationMessage extends Message {
+export interface LocationMessage extends DefaultMessage {
   type: "location";
   location: Location;
 }
 
-export interface StickerMessage extends Message {
+export interface StickerMessage extends DefaultMessage {
   type: "sticker";
   sticker: Media;
 }
 
-export interface TemplateMessage extends Message {
+export interface TemplateMessage extends DefaultMessage {
   type: "template";
   template: Template;
 }
 
-export interface TextMessage extends Message {
+export interface TextMessage extends DefaultMessage {
   type: "text";
   text: Text;
 }
 
-export interface VideoMessage extends Message {
+export interface VideoMessage extends DefaultMessage {
   type: "video";
   video: Media;
 }
@@ -291,3 +304,93 @@ export type MediaMessage =
   | ImageMessage
   | StickerMessage
   | VideoMessage;
+
+import { SendMessageResult, ReadMessageResult } from "./sendRequestHelper";
+
+export interface Bot {
+  readMessage: (payload: any) => ReadMessageResult;
+  sendText: (
+    to: string,
+    text: string,
+    options?: {
+      preview_url?: boolean;
+    }
+  ) => Promise<SendMessageResult>;
+  sendMessage: (
+    to: string,
+    text: string,
+    options?: {
+      preview_url?: boolean;
+    }
+  ) => Promise<SendMessageResult>;
+  sendImage: (
+    to: string,
+    urlOrObjectId: string,
+    options?: {
+      caption?: string;
+    }
+  ) => Promise<SendMessageResult>;
+  sendDocument: (
+    to: string,
+    urlOrObjectId: string,
+    options?: {
+      caption?: string;
+      filename?: string;
+    }
+  ) => Promise<SendMessageResult>;
+  sendAudio: (to: string, urlOrObjectId: string) => Promise<SendMessageResult>;
+  sendVideo: (
+    to: string,
+    urlOrObjectId: string,
+    options?: {
+      caption?: string;
+    }
+  ) => Promise<SendMessageResult>;
+  sendSticker: (
+    to: string,
+    urlOrObjectId: string
+  ) => Promise<SendMessageResult>;
+  sendLocation: (
+    to: string,
+    latitude: number,
+    longitude: number,
+    options?: {
+      name?: string;
+      address?: string;
+    }
+  ) => Promise<SendMessageResult>;
+  sendTemplate: (
+    to: string,
+    name: string,
+    languageCode: string,
+    components?: TemplateComponent[]
+  ) => Promise<SendMessageResult>;
+  sendContacts: (to: string, contacts: Contact[]) => Promise<SendMessageResult>;
+  sendReplyButtons: (
+    to: string,
+    bodyText: string,
+    buttons: {
+      [id: string]: string | number;
+    },
+    options?: {
+      footerText?: string;
+      header?: InteractiveHeader;
+    }
+  ) => Promise<SendMessageResult>;
+  sendList: (
+    to: string,
+    buttonName: string,
+    bodyText: string,
+    sections: {
+      [sectionTitle: string]: {
+        id: string | number;
+        title: string | number;
+        description?: string;
+      }[];
+    },
+    options?: {
+      footerText?: string;
+      header?: InteractiveHeader;
+    }
+  ) => Promise<SendMessageResult>;
+}

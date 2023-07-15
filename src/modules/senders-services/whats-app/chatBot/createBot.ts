@@ -1,5 +1,5 @@
 import isURL from "validator/lib/isURL";
-import { Bot } from "./createBot.types";
+import { Bot } from "./interfaces";
 import {
   ContactMessage,
   InteractiveMessage,
@@ -8,42 +8,40 @@ import {
   MediaMessage,
   TemplateMessage,
   TextMessage,
-} from "./messages.types";
-import { sendRequestHelper } from "./sendRequestHelper";
+  PayloadBase,
+} from "./interfaces";
+import { ReadMessageResult, sendRequestHelper } from "./sendRequestHelper";
 
-interface PaylodBase {
-  messaging_product: "whatsapp";
-  recipient_type: "individual";
-}
-
-const payloadBase: PaylodBase = {
+const payloadBase: PayloadBase = {
   messaging_product: "whatsapp",
   recipient_type: "individual",
 };
-
+const sendRequest = sendRequestHelper();
+const getMediaPayload = (urlOrObjectId: string, options?: MediaBase) => ({
+  ...(isURL(urlOrObjectId) ? { link: urlOrObjectId } : { id: urlOrObjectId }),
+  caption: options?.caption,
+  filename: options?.filename,
+});
 export const createBot = (): Bot => {
-  const sendRequest = sendRequestHelper();
-
-  const getMediaPayload = (urlOrObjectId: string, options?: MediaBase) => ({
-    ...(isURL(urlOrObjectId) ? { link: urlOrObjectId } : { id: urlOrObjectId }),
-    caption: options?.caption,
-    filename: options?.filename,
-  });
-
   return {
-    readMessage(payload: any) {
+    readMessage: (payload = {}): ReadMessageResult => {
+      // console.log(payload);
       const whatsAppId =
         payload.entry[0].changes[0].value.metadata.phone_number_id;
-      const phone = payload.entry[0].changes[0].value.messages[0].from ?? ""; // extract the phone number from the webhook payload
-      const message =
-        payload.entry[0].changes[0].value.messages[0].text.body ?? ""; // extract the message text from the webhook payload
+
+      const phoneNumber = payload.entry[0].changes[0].value.messages[0].from;
+
+      const message = payload.entry[0].changes[0].value.messages[0].text?.body;
+
       const name =
-        payload.entry[0].changes[0].value.contacts?.[0]?.profile?.name ?? "";
+        payload.entry[0].changes[0].value.contacts?.[0]?.profile?.name;
+
       const user = {
-        phone,
+        phoneNumber,
         whatsAppId,
         name,
       };
+
       return { message, user };
     },
     sendText: (to, text, options) =>

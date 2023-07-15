@@ -15,12 +15,15 @@ interface OfficialSendMessageResult {
 export interface SendMessageResult {
   messageId: string;
   phoneNumber: string;
-  whatsappId: string;
+  whatsAppId: string;
 }
 export interface ReadMessageResult {
   message: string;
-  phoneNumber: string;
-  whatsappId: string;
+  user: {
+    phoneNumber: string;
+    whatsAppId: string;
+    name: string;
+  };
 }
 
 const {
@@ -50,7 +53,7 @@ export const sendRequestHelper =
       return {
         messageId: result.messages?.[0]?.id,
         phoneNumber: result.contacts?.[0]?.input,
-        whatsappId: result.contacts?.[0]?.wa_id,
+        whatsAppId: result.contacts?.[0]?.wa_id,
       };
     } catch (err: unknown) {
       if ((err as any).response) {
@@ -58,10 +61,16 @@ export const sendRequestHelper =
         // } else if ((err as any).request) {
         //   throw (err as AxiosError)?.request;
       } else if (err instanceof Error) {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw (err as Error).message;
       } else {
         throw err;
       }
     }
   };
+
+// прочитать - mark as read
+// PUT /v1/messages/message-id
+//
+// {
+//   "status": "read"
+// }
