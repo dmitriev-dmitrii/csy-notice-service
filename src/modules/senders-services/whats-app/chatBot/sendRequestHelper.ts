@@ -17,6 +17,11 @@ export interface SendMessageResult {
   phoneNumber: string;
   whatsappId: string;
 }
+export interface ReadMessageResult {
+  message: string;
+  phoneNumber: string;
+  whatsappId: string;
+}
 
 const {
   WHATSAPP_PHONE_ID,

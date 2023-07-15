@@ -6,22 +6,23 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from "@nestjs/common";
-import { SendNoticeService } from "./send-notice.service";
-import { NoticeDto } from "./dto/notice.dto";
+import { WhatsAppService } from "../senders-services/whats-app/whats-app.service";
+@Controller("message-recipient")
+export class MessageRecipientController {
+  constructor(private readonly WhatsAppService: WhatsAppService) {}
 
-@Controller("send")
-export class SendNoticeController {
-  constructor(private readonly SendNoticeService: SendNoticeService) {}
-
-  @Post()
-  sendNotice(@Body() data: NoticeDto) {
-    return this.SendNoticeService.sendNotice(data);
+  @Post("whats-app")
+  onWhatsAppMessage(@Body() payload) {
+    return this.WhatsAppService.onMessage(payload);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.sendService.findAll();
+  // @Get("webhook")
+  // abc(req) {
+  //   console.log(req);
+  //   console.log("ffff");
+  //   return "dffffx";
   // }
 
   // @Get(':id')

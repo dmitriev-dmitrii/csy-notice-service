@@ -3,7 +3,7 @@ import {
   InteractiveHeader,
   TemplateComponent,
 } from "./messages.types";
-import { SendMessageResult } from "./sendRequestHelper";
+import { SendMessageResult, ReadMessageResult } from "./sendRequestHelper";
 import { FreeFormObject } from "./utils/misc";
 import { PubSubEvent } from "./utils/pubSub";
 
@@ -17,6 +17,7 @@ export interface Message {
 }
 
 export interface Bot {
+  readMessage: (payload) => Promise<ReadMessageResult>;
   sendText: (
     to: string,
     text: string,

@@ -22,7 +22,6 @@ const payloadBase: PaylodBase = {
 };
 
 export const createBot = (): Bot => {
-  // let expressServer: ExpressServer;
   const sendRequest = sendRequestHelper();
 
   const getMediaPayload = (urlOrObjectId: string, options?: MediaBase) => ({
@@ -32,22 +31,21 @@ export const createBot = (): Bot => {
   });
 
   return {
-    // startExpressServer: async (options) => {
-    //   if (!expressServer) {
-    //     expressServer = await startExpressServer(options);
-    //   }
-    //
-    //   return expressServer;
-    // },
-    // on: (event, cb) => {
-    //   const token = PubSub.subscribe(
-    //     `bot-${fromPhoneNumberId}-${event}`,
-    //     (_, data) => cb(data)
-    //   );
-    //   return token;
-    // },
-    // unsubscribe: (token) => PubSub.unsubscribe(token),
-
+    readMessage(payload: any) {
+      const whatsAppId =
+        payload.entry[0].changes[0].value.metadata.phone_number_id;
+      const phone = payload.entry[0].changes[0].value.messages[0].from ?? ""; // extract the phone number from the webhook payload
+      const message =
+        payload.entry[0].changes[0].value.messages[0].text.body ?? ""; // extract the message text from the webhook payload
+      const name =
+        payload.entry[0].changes[0].value.contacts?.[0]?.profile?.name ?? "";
+      const user = {
+        phone,
+        whatsAppId,
+        name,
+      };
+      return { message, user };
+    },
     sendText: (to, text, options) =>
       sendRequest<TextMessage>({
         ...payloadBase,
