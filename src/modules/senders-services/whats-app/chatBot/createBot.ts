@@ -26,6 +26,34 @@ export const createBot = (): Bot => {
   return {
     readMessage: (payload = {}): ReadMessageResult => {
       // console.log(payload);
+      //   switch (type) {
+      //       case 'text':
+      //           event = PubSubEvents.text;
+      //           data = { text: rest.text?.body };
+      //           break;
+      //
+      //       case 'image':
+      //       case 'document':
+      //       case 'audio':
+      //       case 'video':
+      //       case 'sticker':
+      //       case 'location':
+      //       case 'contacts':
+      //           event = PubSubEvents[type as PubSubEvent];
+      //           data = rest[type];
+      //           break;
+      //
+      //       case 'interactive':
+      //           event = rest.interactive.type;
+      //           data = {
+      //               ...(rest.interactive.list_reply || rest.interactive.button_reply),
+      //           };
+      //           break;
+      //
+      //       default:
+      //           break;
+      //   }
+
       const whatsAppId =
         payload.entry[0].changes[0].value.metadata.phone_number_id;
 

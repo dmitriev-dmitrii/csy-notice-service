@@ -29,7 +29,6 @@ export interface ReadMessageResult {
 const {
   WHATSAPP_PHONE_ID,
   WHATSAPP_ACCESS_TOKEN,
-  WHATSAPP_WEBHOOK_TOKEN,
   WHATSAPP_API_URL,
   WHATSAPP_API_VERSION,
 } = env;
@@ -68,7 +67,7 @@ export const sendRequestHelper =
     }
   };
 
-// прочитать - mark as read
+// TO-DO сделать функционал прочитать - mark as read
 // PUT /v1/messages/message-id
 //
 // {
