@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
-// import { AppController } from './app.controller';
+import { AppController } from "./app.controller";
 // import { AppService } from './app.service';
-import { SendNoticeModule } from "./modules/send-notice/send-notice.module";
-import { MessageRecipientModule } from "./modules/message-recipient/message-recipient.module";
+import { NoticeSend } from "./modules/notice-send/notice-send";
+import { NoticeRecipient } from "./modules/notice-recipient/notice-recipient";
 
 @Module({
-  imports: [SendNoticeModule, MessageRecipientModule],
-  // controllers: [AppController],
+  imports: [NoticeSend, NoticeRecipient],
+  controllers: [AppController],
   // providers: [AppService],
 })
 export class AppModule {}

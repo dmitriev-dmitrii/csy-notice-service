@@ -1,4 +1,4 @@
-import { WhatsAppService } from "../senders-services/whats-app/whats-app.service";
+import { WhatsAppService } from "../bot-services/whats-app/whats-app.service";
 
 import env from "../../config/env";
 const { APP_ACCESS_TOKEN } = env;
@@ -12,21 +12,25 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-@Controller("message-recipient")
-export class MessageRecipientController {
+import { BotType } from "../bot-services/types/BotType";
+@Controller("notice-recipient")
+export class NoticeRecipientController {
   constructor(private readonly WhatsAppService: WhatsAppService) {}
 
-  @Post("whats-app")
+  @Post(BotType.WHATS_APP)
   onWhatsAppMessage(@Body() payload) {
+    // webhook для входящих сообщений WHATS_APP
     return this.WhatsAppService.onMessage(payload);
   }
 
-  @Get("whats-app")
+  @Get(BotType.WHATS_APP)
   WhatsAppVerifyToken(@Query() query) {
+    // сюда переодически стреляет фейсбук - проверяет webhook и  делает для себя токен
+
     const mode = query["hub.mode"];
     const token = query["hub.verify_token"];
     const challenge = query["hub.challenge"];
-    // console.log(mode, token, challenge);
+
     if (!mode) {
       throw new HttpException(
         "param 'hub.mode' is required",
@@ -41,9 +45,7 @@ export class MessageRecipientController {
     }
 
     if (mode === "subscribe" && token === APP_ACCESS_TOKEN) {
-      // Respond with 200 OK and challenge token from the request
       console.log("WHATS_APP_WEBHOOK_SUCCESS_VERIFIED");
-      // Check the mode and token sent are correct
 
       return challenge;
     }

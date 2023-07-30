@@ -1,6 +1,7 @@
 export class NoticeDto {
-  user: string | number;
+  number: string;
+  user: string;
   noticeType: string;
-  template: string | number;
+  template?: string | number;
   text?: string;
 }

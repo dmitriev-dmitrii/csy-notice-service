@@ -12,7 +12,7 @@ const {
 // TO-DO написать валидатор  env перменных
 
 export default Object.freeze({
-  APP_PORT,
+  APP_PORT: parseInt(APP_PORT, 10),
   APP_ACCESS_TOKEN,
   WHATSAPP_ACCESS_TOKEN,
   WHATSAPP_PHONE_ID,
